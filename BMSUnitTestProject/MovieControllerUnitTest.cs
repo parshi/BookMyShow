@@ -15,8 +15,8 @@ namespace BookMyShowUnitTest
         {
             string cityName = "Banglore";
             var controller = new MovieController();
-            var result = controller.GetMoviesByCity(cityName) as List<string>;
-            Assert.IsNotNull(result);
+            var result = controller.GetMoviesByCity(cityName);
+            Assert.IsNotNull(result.Rows);
         }
 
         [TestMethod]
