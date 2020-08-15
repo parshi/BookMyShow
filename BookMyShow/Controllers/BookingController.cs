@@ -33,16 +33,23 @@ namespace BookMyShow.Controllers
 
          private CheckAvalibilityResponse FormCheckAvalibilityResponse(DataRow dr)
          {
-             CheckAvalibilityResponse response = new CheckAvalibilityResponse()
-             {
-                 Avaliable = Convert.ToInt32(dr["TotalSeatsAvaliable"]),
-                 SliverClass = Convert.ToInt32(dr["SliverClass"]),
-                 GoldClass = Convert.ToInt32(dr["GoldClass"]),
-                 PlatinumClass = Convert.ToInt32(dr["Platinum"]),
-                 VIP = Convert.ToInt32(dr["VIP"])
-             };
-             return response;
-         }
+            try
+            {
+                CheckAvalibilityResponse response = new CheckAvalibilityResponse()
+                {
+                    Avaliable = Convert.ToInt32(dr["TotalSeatsAvaliable"]),
+                    SliverClass = Convert.ToInt32(dr["SliverClass"]),
+                    GoldClass = Convert.ToInt32(dr["GoldClass"]),
+                    PlatinumClass = Convert.ToInt32(dr["Platinum"]),
+                    VIP = Convert.ToInt32(dr["VIP"])
+                };
+                return response;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
          [HttpPost]
          [Route("Confirm")]
