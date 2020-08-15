@@ -11,6 +11,7 @@ namespace BookMyShow.Models
         public string Cinema { get; set; }
         public string Location { get; set; }
         public string City { get; set; }
+        public string Date { get; set; }
         public string ShowTime { get; set; }
     }
      public class CheckAvalibilityResponse

@@ -11,33 +11,27 @@ namespace BookMyShow.Controllers
 {
     public class ScreensController : ApiController
     {
-        // GET api/screens
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
 
-        // GET api/screens/5
-        public string Get(int id)
+        [HttpPost]
+        [Route("api/screens/addscreen")]
+        public Response AddScreen([FromBody]Screen screen)
         {
-            return "value";
-        }
-
-        // POST api/screens
-        public void Post([FromBody]Screen screen)
-        {
-            DBHelper dBHelper = new DBHelper();
-            dBHelper.AddScreen(screen);
-        }
-
-        // PUT api/screens/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/screens/5
-        public void Delete(int id)
-        {
+            try
+            {
+                if (string.IsNullOrEmpty(screen.Name) || string.IsNullOrEmpty(screen.Location) || string.IsNullOrEmpty(screen.City) || screen.Capacity <= 0 )
+                {
+                    return new Response { Status = "Fail", Message = "Name,Location,City,Capacity are mandatory to addscreen" };
+                }
+                if(screen.GoldClass + screen.SliverClass +screen.Platinum+screen.VIP !=screen.Capacity )
+                    return new Response { Status = "Fail", Message = "Capacity is not matching with seats count in classes" };
+                DBHelper dBHelper = new DBHelper();
+                dBHelper.AddScreen(screen);
+                return new Response { Status = "Success", Message = "SuccessFully Added." };
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

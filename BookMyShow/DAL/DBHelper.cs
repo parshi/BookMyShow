@@ -83,8 +83,12 @@ namespace BookMyShow.DAL
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("@Name", SqlDbType.VarChar).Value = screen.Name;
                     command.Parameters.Add("@Location", SqlDbType.VarChar).Value = screen.Location;
+                    command.Parameters.Add("@City", SqlDbType.VarChar).Value = screen.City;
                     command.Parameters.Add("@Capacity", SqlDbType.Int).Value = screen.Capacity;
-                    command.Parameters.Add("@City", SqlDbType.Int).Value = screen.City;
+                    command.Parameters.Add("@SliverClass", SqlDbType.Int).Value = screen.SliverClass;
+                    command.Parameters.Add("@GoldClass", SqlDbType.Int).Value = screen.GoldClass;
+                    command.Parameters.Add("@PlatinumClass", SqlDbType.Int).Value = screen.Platinum;
+                    command.Parameters.Add("@VIP", SqlDbType.Int).Value = screen.VIP;
                     command.Connection.Open();
                     command.ExecuteNonQuery();
                 }
@@ -191,6 +195,7 @@ namespace BookMyShow.DAL
                     command.Parameters.Add("@Cinema", SqlDbType.VarChar).Value = request.Cinema;
                     command.Parameters.Add("@Location", SqlDbType.VarChar).Value = request.Location;
                     command.Parameters.Add("@City", SqlDbType.VarChar).Value = request.City;
+                    command.Parameters.Add("@Date", SqlDbType.NVarChar).Value = request.Date;
                     command.Parameters.Add("@ShowTime", SqlDbType.NVarChar).Value = request.ShowTime;
                     DataTable dt = ExecuteDataTable(command);
                     return dt;
@@ -214,6 +219,9 @@ namespace BookMyShow.DAL
                     command.Parameters.Add("@SeatType", SqlDbType.VarChar).Value = request.Class;
                     command.Parameters.Add("@NumOfTickets", SqlDbType.Int).Value = request.NumberOfTickets;
                     command.Parameters.Add("@Cinema", SqlDbType.VarChar).Value = request.Cinema;
+                    command.Parameters.Add("@MovieName", SqlDbType.VarChar).Value = request.MovieName;
+                    command.Parameters.Add("@ShowDate", SqlDbType.NVarChar).Value = request.BookingDate;
+                    command.Parameters.Add("@ShowTime", SqlDbType.NVarChar).Value = request.ShowTime;
                     command.Connection.Open();
                     command.ExecuteNonQuery();
                 }
@@ -221,6 +229,29 @@ namespace BookMyShow.DAL
             catch (Exception)
             {
                 
+                throw;
+            }
+        }
+
+        internal void AddMovieToCinema(ScreeingRequest request)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand("dbo.AddMovieToCinema", conn);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@Cinema", SqlDbType.VarChar).Value = request.Cinema;
+                    command.Parameters.Add("@Movie", SqlDbType.VarChar).Value = request.Movie;
+                    command.Parameters.Add("@ShowDate", SqlDbType.NVarChar).Value = request.ShowDate;
+                    command.Parameters.Add("@ShowTime", SqlDbType.NVarChar).Value = request.ShowTime;
+                    command.Connection.Open();
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch (Exception)
+            {
+
                 throw;
             }
         }

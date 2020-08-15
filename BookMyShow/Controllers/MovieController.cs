@@ -13,40 +13,64 @@ namespace BookMyShow.Controllers
     public class MovieController : ApiController
     {
         [HttpGet]
-        [Route("api/movie/getmoviebycity/{city}")]
-        public List<string> GetMoviesByCity(string city)
+        [Route("api/movie/getmoviesbycity/{city}")]
+        public DataTable GetMoviesByCity(string city)
         {
-            DBHelper dBHelper = new DBHelper();
-            List<string> movies = new List<string>();
-            DataTable dt = dBHelper.GetMoviesByCity(city);
-            movies = dt.AsEnumerable().Select(x => Convert.ToString(x["Name"])).ToList();
-            return movies;
+            try
+            {
+                ValidateParamPassedInURL(city);
+                List<string> movies = new List<string>();
+                DBHelper dBHelper = new DBHelper();               
+                DataTable dt = dBHelper.GetMoviesByCity(city);
+                return dt;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private void ValidateParamPassedInURL(string city)
+        {
+            string Invalid = "(ALTER|CREATE|DELETE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|UNION( +ALL){0,1})";
+            if (Invalid.Contains(city))
+                throw new Exception("provide proper search key");
         }
 
         [HttpGet]
         [Route("api/movie/getmoviedetails/{movie}")]
         public DataTable GetMovieDetails(string movie)
         {
-            DBHelper dBHelper = new DBHelper();
-            DataTable dt = dBHelper.GetMoviesDetailsByName(movie);
-            return dt;
+            try
+            {
+                ValidateParamPassedInURL(movie);
+                DBHelper dBHelper = new DBHelper();
+                DataTable dt = dBHelper.GetMoviesDetailsByName(movie);
+                return dt;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
-        // POST api/movie
-        public void Post([FromBody]Movie movie)
+        [HttpPost]
+        [Route("api/movie/addmovie")]
+        public void AddMovie([FromBody]Movie movie)
         {
-            DBHelper dBHelper = new DBHelper();
-            dBHelper.AddMovie(movie);
-        }
-
-        // PUT api/movie/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/movie/5
-        public void Delete(int id)
-        {
+            try
+            {
+                if (string.IsNullOrEmpty(movie.Name))
+                {
+                    throw new Exception("movie name is mandatory to addmovie");
+                }
+                DBHelper dBHelper = new DBHelper();
+                dBHelper.AddMovie(movie);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

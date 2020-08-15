@@ -14,11 +14,15 @@ namespace BookMyShow.Controllers
     public class BookingController : ApiController
     {
          [HttpPost]
-         [Route("CheckAvalibility")]
+         [Route("checkavalibility")]
          public CheckAvalibilityResponse CheckAvalibility([FromBody]CheckAvalibilityRequest request)
          {
              try
              {
+                 if (string.IsNullOrEmpty(request.Cinema) || string.IsNullOrEmpty(request.Location) || string.IsNullOrEmpty(request.MovieName) || string.IsNullOrEmpty(request.ShowTime) || string.IsNullOrEmpty(request.City) || string.IsNullOrEmpty(request.Date))
+                 {
+                     throw new Exception("MovieName,Cinema,Location,City,Date,Time are mandatory to CheckAvalibility");
+                 }
                  DBHelper dBHelper = new DBHelper();
                  DataTable dt = dBHelper.CheckAvalibility(request);
                  DataRow dr = dt.Rows[0];
@@ -52,14 +56,19 @@ namespace BookMyShow.Controllers
         }
 
          [HttpPost]
-         [Route("Confirm")]
+         [Route("confirm")]
          public Response Booking([FromBody]BookingRequest request)
          {
              try
              {
+                 if (string.IsNullOrEmpty(request.Cinema) || string.IsNullOrEmpty(request.Location) || string.IsNullOrEmpty(request.MovieName) || string.IsNullOrEmpty(request.ShowTime) || string.IsNullOrEmpty(request.City) || string.IsNullOrEmpty(request.BookingDate))
+                 {
+                     throw new Exception("MovieName,Cinema,Location,City,Date,Time are mandatory to request");
+                 }
                  DBHelper dBHelper = new DBHelper();
                  CheckAvalibilityRequest avalibityRequest = new CheckAvalibilityRequest()
                  {
+                     Date=request.BookingDate,
                      ShowTime = request.ShowTime,
                      Cinema = request.Cinema,
                      City = request.City,

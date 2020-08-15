@@ -19,6 +19,10 @@ namespace BookMyShow.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(details.Name) || string.IsNullOrEmpty(details.Email) || string.IsNullOrEmpty(details.Password))
+                {
+                    return new Response { Status = "Fail", Message = "Name,Email,Password are mandatory to register" };
+                }
                 DBHelper dBHelper = new DBHelper();
                 dBHelper.AddUser(details);
                 return new Response { Status = "Success", Message = "Record SuccessFully Saved." };
@@ -35,6 +39,10 @@ namespace BookMyShow.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(loginDetails.Email) || string.IsNullOrEmpty(loginDetails.Password))
+                {
+                    return new Response { Status = "Fail", Message = "Email,Password are mandatory to login" };
+                }
                 DBHelper dBHelper = new DBHelper();
                 DataTable dt = dBHelper.ValidateUser(loginDetails);
                 if (dt.Rows.Count ==0)
