@@ -31,3 +31,27 @@ http://localhost:49704/api/screening/addmovietocinema
   "ShowTime":"06:00 PM",
   "ShowDate":"20-08-2020"
 } 
+
+4.Book Ticket
+
+to book ticket we need have user loggedin and will have a token to get get token 
+http://localhost:49704/token
+
+header : url-encodedformat
+
+username:admin@bookmyshow.com
+password:admin
+grant_type:password
+
+http://localhost:49704/api/booking/Confirm
+Pass header as Authorization: "token"
+{
+  "MovieName": "KGF",
+  "Cinema": "Mega Multiplex",
+  "Location": "Marthalli",
+  "City": "Banglore",
+  "ShowTime": "06:00 PM",
+  "NumberOfTickets":"10",
+  "BookingDate":"15-08-2020",
+  "Class":"GoldClass"
+}
