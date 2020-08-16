@@ -12,6 +12,13 @@ namespace BookMyShow.Controllers
 {
     public class MovieController : ApiController
     {
+        private IDALLayer _dALLayer;
+
+        public MovieController(IDALLayer dALLayer)
+        {
+            _dALLayer = dALLayer;
+        }
+
         [HttpGet]
         [Route("api/movie/getmoviesbycity/{city}")]
         public DataTable GetMoviesByCity(string city)
@@ -19,9 +26,8 @@ namespace BookMyShow.Controllers
             try
             {
                 ValidateParamPassedInURL(city);
-                List<string> movies = new List<string>();
-                DBHelper dBHelper = new DBHelper();               
-                DataTable dt = dBHelper.GetMoviesByCity(city);
+                List<string> movies = new List<string>();       
+                DataTable dt = _dALLayer.GetMoviesByCity(city);
                 return dt;
             }
             catch (Exception)
@@ -44,8 +50,7 @@ namespace BookMyShow.Controllers
             try
             {
                 ValidateParamPassedInURL(movie);
-                DBHelper dBHelper = new DBHelper();
-                DataTable dt = dBHelper.GetMoviesDetailsByName(movie);
+                DataTable dt = _dALLayer.GetMoviesDetailsByName(movie);
                 return dt;
             }
             catch (Exception)
@@ -64,8 +69,7 @@ namespace BookMyShow.Controllers
                 {
                     throw new Exception("movie name is mandatory to addmovie");
                 }
-                DBHelper dBHelper = new DBHelper();
-                dBHelper.AddMovie(movie);
+                _dALLayer.AddMovie(movie);
             }
             catch (Exception)
             {

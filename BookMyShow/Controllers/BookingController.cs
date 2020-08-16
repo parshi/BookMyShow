@@ -13,7 +13,13 @@ namespace BookMyShow.Controllers
     [RoutePrefix("api/booking")]
     public class BookingController : ApiController
     {
-         [HttpPost]
+        private IDALLayer _dALLayer;
+        public BookingController(IDALLayer dALLayer)
+        {
+            _dALLayer = dALLayer;
+        }
+
+        [HttpPost]
          [Route("checkavalibility")]
          public CheckAvalibilityResponse CheckAvalibility([FromBody]CheckAvalibilityRequest request)
          {
@@ -21,10 +27,9 @@ namespace BookMyShow.Controllers
              {
                  if (string.IsNullOrEmpty(request.Cinema) || string.IsNullOrEmpty(request.Location) || string.IsNullOrEmpty(request.MovieName) || string.IsNullOrEmpty(request.ShowTime) || string.IsNullOrEmpty(request.City) || string.IsNullOrEmpty(request.Date))
                  {
-                     throw new Exception("MovieName,Cinema,Location,City,Date,Time are mandatory to CheckAvalibility");
+                     throw new Exception("MovieName, Cinema,Location,City,Date,Time are mandatory to CheckAvalibility");
                  }
-                 DBHelper dBHelper = new DBHelper();
-                 DataTable dt = dBHelper.CheckAvalibility(request);
+                 DataTable dt = _dALLayer.CheckAvalibility(request);
                  DataRow dr = dt.Rows[0];
                  CheckAvalibilityResponse response = FormCheckAvalibilityResponse(dr);
                  return response;
@@ -56,7 +61,8 @@ namespace BookMyShow.Controllers
         }
 
          [HttpPost]
-         [Route("confirm")]
+        [Authorize]
+        [Route("confirm")]
          public Response Booking([FromBody]BookingRequest request)
          {
              try
@@ -65,7 +71,6 @@ namespace BookMyShow.Controllers
                  {
                      throw new Exception("MovieName,Cinema,Location,City,Date,Time are mandatory to request");
                  }
-                 DBHelper dBHelper = new DBHelper();
                  CheckAvalibilityRequest avalibityRequest = new CheckAvalibilityRequest()
                  {
                      Date=request.BookingDate,
@@ -75,7 +80,7 @@ namespace BookMyShow.Controllers
                      Location = request.Location,
                      MovieName = request.MovieName
                  };
-                 DataTable dt = dBHelper.CheckAvalibility(avalibityRequest);
+                 DataTable dt = _dALLayer.CheckAvalibility(avalibityRequest);
                  DataRow dr = dt.Rows[0];
                  CheckAvalibilityResponse avalibilityResponse = FormCheckAvalibilityResponse(dr);
                  if(avalibilityResponse != null)
@@ -131,7 +136,7 @@ namespace BookMyShow.Controllers
          {
              if (request.NumberOfTickets <= numOfTickets)
              {
-                 new DBHelper().BookTicket(request);
+                _dALLayer.BookTicket(request);
                  return new Response { Status = "Success", Message = "Booking Successfull" };
              }
              else

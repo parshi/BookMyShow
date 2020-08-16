@@ -11,6 +11,11 @@ namespace BookMyShow.Controllers
 {
     public class ScreeningController : ApiController
     {
+        private IDALLayer _dALLayer;
+        public ScreeningController(IDALLayer dALLayer)
+        {
+            _dALLayer = dALLayer;
+        }
         [HttpPost]
         [Route("api/screening/addmovietocinema")]
         public Response AddMovieToCinema([FromBody]ScreeingRequest request)
@@ -21,8 +26,7 @@ namespace BookMyShow.Controllers
                 {
                     return new Response { Status = "Fail", Message = "Movie,Cinema,ShowTime,ShowDate are mandatory to register" };
                 }
-                DBHelper dBHelper = new DBHelper();
-                dBHelper.AddMovieToCinema(request);
+                _dALLayer.AddMovieToCinema(request);
                 return new Response { Status = "Success", Message = "Added SuccessFully." };
             }
             catch (Exception)

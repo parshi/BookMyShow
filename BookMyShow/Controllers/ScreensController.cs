@@ -11,7 +11,11 @@ namespace BookMyShow.Controllers
 {
     public class ScreensController : ApiController
     {
-
+        private IDALLayer _dALLayer;
+        public ScreensController(IDALLayer dALLayer)
+        {
+            _dALLayer = dALLayer;
+        }
         [HttpPost]
         [Route("api/screens/addscreen")]
         public Response AddScreen([FromBody]Screen screen)
@@ -24,8 +28,7 @@ namespace BookMyShow.Controllers
                 }
                 if(screen.GoldClass + screen.SliverClass +screen.Platinum+screen.VIP !=screen.Capacity )
                     return new Response { Status = "Fail", Message = "Capacity is not matching with seats count in classes" };
-                DBHelper dBHelper = new DBHelper();
-                dBHelper.AddScreen(screen);
+               _dALLayer.AddScreen(screen);
                 return new Response { Status = "Success", Message = "SuccessFully Added." };
             }
             catch (Exception)
