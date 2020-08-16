@@ -4,6 +4,7 @@ using BookMyShow.Controllers;
 using System.Collections.Generic;
 using BookMyShow.Models;
 using System.Data;
+using BMSUnitTestProject;
 
 namespace BookMyShowUnitTest
 {
@@ -14,7 +15,8 @@ namespace BookMyShowUnitTest
         public void GetMoviesByCity()
         {
             string cityName = "Banglore";
-            var controller = new MovieController();
+            MockDALLayer dllLayer = new MockDALLayer();
+            var controller = new MovieController(dllLayer);
             var result = controller.GetMoviesByCity(cityName);
             Assert.IsNotNull(result.Rows);
         }
@@ -24,7 +26,8 @@ namespace BookMyShowUnitTest
         {
             Movie movieDetails = new Movie();
             movieDetails.Name = "KGF";
-            var controller = new MovieController();
+            MockDALLayer dllLayer = new MockDALLayer();
+            var controller = new MovieController(dllLayer);
             controller.AddMovie(movieDetails);
             DataTable result = controller.GetMovieDetails(movieDetails.Name);
             Assert.IsTrue(result.Rows.Count == 1);
@@ -34,7 +37,8 @@ namespace BookMyShowUnitTest
         public void GetMovieDetails()
         {
             string name = "KGF";
-            var controller = new MovieController();
+            MockDALLayer dllLayer = new MockDALLayer();
+            var controller = new MovieController(dllLayer);
             DataTable result = controller.GetMovieDetails(name);
             Assert.IsTrue(result.Rows.Count == 1);
         }

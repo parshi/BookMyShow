@@ -19,7 +19,8 @@ namespace BMSUnitTestProject
                 City = "Banglore",
                 ShowTime = "11:00 AM",
             };
-            var controller = new BookingController();
+            MockDALLayer dllLayer = new MockDALLayer();
+            var controller = new BookingController(dllLayer);
             CheckAvalibilityResponse result = controller.CheckAvalibility(avalibityRequest);
             Assert.IsNotNull(result);
         }
@@ -34,7 +35,8 @@ namespace BMSUnitTestProject
                 City = "Banglore",
                 ShowTime = "11:00 AM",
             };
-            var controller = new BookingController();
+            MockDALLayer dllLayer = new MockDALLayer();
+            var controller = new BookingController(dllLayer);
             CheckAvalibilityResponse result = controller.CheckAvalibility(avalibityRequest);
             Assert.IsNull(result);
         }
@@ -52,7 +54,8 @@ namespace BMSUnitTestProject
                 NumberOfTickets = 10,
                 Class = "GoldClass"
             };
-            var controller = new BookingController();
+            MockDALLayer dllLayer = new MockDALLayer();
+            var controller = new BookingController(dllLayer);
             var response = controller.Booking(request);
             Response expected = new Response { Status = "Success", Message = "Booking Successfull" };
             Assert.AreEqual(response,expected);
@@ -71,7 +74,8 @@ namespace BMSUnitTestProject
                 NumberOfTickets = 1000,
                 Class = "GoldClass"
             };
-            var controller = new BookingController();
+            MockDALLayer dllLayer = new MockDALLayer();
+            var controller = new BookingController(dllLayer);
             var response = controller.Booking(request);
             Response expected = new Response { Status = "Fail", Message = "Select proper seating class" };
             Assert.AreEqual(response, expected);
